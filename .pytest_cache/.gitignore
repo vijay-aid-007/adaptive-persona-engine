@@ -3,4 +3,5 @@ echo "__pycache__/
 *.pyo
 venv/
 .env
-*.egg-info/" > .gitignore
+*.egg-info/
+.pytest_cache/" > .gitignore
