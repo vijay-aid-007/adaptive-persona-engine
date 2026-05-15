@@ -1,0 +1,96 @@
+# Intent classifier training data
+# Format: (text, label)
+# Labels: reminder | emotional_support | action_item | small_talk | unknown
+
+TRAINING_DATA = [
+    # REMINDER
+    ("Can you remind me to call John tomorrow at 9am", "reminder"),
+    ("Set a reminder for my meeting on Friday", "reminder"),
+    ("Don't let me forget to submit the report by end of day", "reminder"),
+    ("Remind me to take my medication tonight", "reminder"),
+    ("Alert me when it's time to leave for the airport", "reminder"),
+    ("Remember to follow up with the client next week", "reminder"),
+    ("Ping me about the standup in 30 minutes", "reminder"),
+    ("I need to remember to buy groceries after work", "reminder"),
+    ("Add a reminder for mom's birthday on the 15th", "reminder"),
+    ("Remind me to check the deployment status at 5pm", "reminder"),
+    ("Set an alert for the team sync tomorrow morning", "reminder"),
+    ("Can you remind me about the dentist appointment", "reminder"),
+    ("Note to self: review the PR before lunch", "reminder"),
+    ("Don't forget to water the plants tonight", "reminder"),
+    ("Remind me to charge my laptop before the presentation", "reminder"),
+
+    # EMOTIONAL_SUPPORT
+    ("I'm feeling really overwhelmed and don't know what to do", "emotional_support"),
+    ("I've been anxious all week and can't stop worrying", "emotional_support"),
+    ("I feel like nobody understands me", "emotional_support"),
+    ("I'm so stressed about everything, it's too much", "emotional_support"),
+    ("I cried this morning and I don't even know why", "emotional_support"),
+    ("I feel like I'm failing at everything", "emotional_support"),
+    ("I'm really sad today, just needed someone to talk to", "emotional_support"),
+    ("Everything feels hopeless right now", "emotional_support"),
+    ("I'm exhausted emotionally, not physically", "emotional_support"),
+    ("I had a panic attack and I'm scared", "emotional_support"),
+    ("My relationship is falling apart and I'm devastated", "emotional_support"),
+    ("I lost my job and I'm terrified about the future", "emotional_support"),
+    ("I feel so lonely even when I'm around people", "emotional_support"),
+    ("I'm going through a tough time and just need to vent", "emotional_support"),
+    ("I don't feel like myself lately, everything feels grey", "emotional_support"),
+    ("I'm really struggling with self-doubt", "emotional_support"),
+
+    # ACTION_ITEM
+    ("Please summarize the meeting notes from today", "action_item"),
+    ("Can you draft an email to the client about the delay", "action_item"),
+    ("Generate a report on last month's performance", "action_item"),
+    ("Create a task for the bug fix in JIRA", "action_item"),
+    ("Update the README with the new API endpoints", "action_item"),
+    ("Send the invoice to accounting by end of day", "action_item"),
+    ("Write unit tests for the authentication module", "action_item"),
+    ("Book a meeting room for Thursday 2pm", "action_item"),
+    ("Fix the login bug on the staging server", "action_item"),
+    ("Review and merge the pull request from Sarah", "action_item"),
+    ("Deploy the hotfix to production", "action_item"),
+    ("Compile the weekly status report for stakeholders", "action_item"),
+    ("Update the database schema for the new feature", "action_item"),
+    ("Onboard the new developer with access credentials", "action_item"),
+    ("Archive the old project files and share the link", "action_item"),
+    ("Translate this paragraph to Spanish", "action_item"),
+    ("add this to my task list and follow up Friday", "action_item"),
+
+    # SMALL_TALK
+    ("Hey how are you doing today", "small_talk"),
+    ("What's up? Just checking in", "small_talk"),
+    ("Haha that's so funny I can't stop laughing", "small_talk"),
+    ("Did you watch the game last night? Crazy ending!", "small_talk"),
+    ("It's so cold outside today", "small_talk"),
+    ("Happy Monday! Hope you had a good weekend", "small_talk"),
+    ("I can't believe it's already Friday", "small_talk"),
+    ("Just wanted to say hi, nothing specific", "small_talk"),
+    ("What do you think about pineapple on pizza", "small_talk"),
+    ("Tell me a joke", "small_talk"),
+    ("How was your weekend?", "small_talk"),
+    ("This coffee is amazing today", "small_talk"),
+    ("I'm bored, let's chat", "small_talk"),
+    ("Good morning! Ready for another day?", "small_talk"),
+    ("LOL okay that made my day", "small_talk"),
+
+    # UNKNOWN
+    ("Xkjfhsd lakjfhsd?", "unknown"),
+    ("42", "unknown"),
+    ("...", "unknown"),
+    ("asdf", "unknown"),
+    ("?????", "unknown"),
+    ("I don't know what I want to say", "unknown"),
+    ("hmm", "unknown"),
+    ("okay", "unknown"),
+    ("yes no maybe", "unknown"),
+    ("blah blah blah", "unknown"),
+]
+
+LABEL_DESCRIPTIONS = {
+    "reminder": "User wants to be reminded or notified about something at a future time",
+    "emotional_support": "User is expressing emotional distress and seeks empathy or comfort",
+    "action_item": "User is requesting a concrete task to be executed or completed",
+    "small_talk": "User is engaging in casual, non-task-oriented conversation",
+    "unknown": "Message intent is unclear, ambiguous, or nonsensical",
+}

@@ -1,0 +1,204 @@
+{
+  "user_id": "user_001",
+  "summary": "Day 1 \u2192 curious & formal | Day 2 \u2192 happy & formal | Day 3 \u2192 frustrated & formal | Day 4 \u2192 anxious & casual | Day 7 \u2192 playful & neutral",
+  "snapshots": [
+    {
+      "day": 1,
+      "date": "2024-01-01",
+      "tone": "formal",
+      "mood": "curious",
+      "energy": "medium",
+      "sentiment_score": 0.904,
+      "formality_score": 1.0,
+      "dominant_topics": [
+        "memory",
+        "architecture",
+        "documentation"
+      ],
+      "mentioned_entities": [],
+      "sample_text": "Good morning. I would like to understand how this memory system works. Could you please explain the architecture?",
+      "raw_labels": {
+        "frustrated": 0,
+        "curious": 5,
+        "happy": 2,
+        "playful": 0,
+        "anxious": 0,
+        "satisfied": 1
+      }
+    },
+    {
+      "day": 2,
+      "date": "2024-01-02",
+      "tone": "formal",
+      "mood": "happy",
+      "energy": "medium",
+      "sentiment_score": 0.493,
+      "formality_score": 0.722,
+      "dominant_topics": [
+        "ai",
+        "family",
+        "reminders"
+      ],
+      "mentioned_entities": [
+        "sister"
+      ],
+      "sample_text": "Hey, I was thinking about what we discussed yesterday. Really got me thinking about AI systems.",
+      "raw_labels": {
+        "frustrated": 0,
+        "curious": 1,
+        "happy": 2,
+        "playful": 2,
+        "anxious": 0,
+        "satisfied": 1
+      }
+    },
+    {
+      "day": 3,
+      "date": "2024-01-03",
+      "tone": "formal",
+      "mood": "frustrated",
+      "energy": "medium",
+      "sentiment_score": -0.614,
+      "formality_score": 0.833,
+      "dominant_topics": [
+        "rag",
+        "vector-databases",
+        "frustration"
+      ],
+      "mentioned_entities": [
+        "sister"
+      ],
+      "sample_text": "Ugh, I've been trying to understand this RAG pipeline for hours and I'm still confused.",
+      "raw_labels": {
+        "frustrated": 6,
+        "curious": 1,
+        "happy": 0,
+        "playful": 0,
+        "anxious": 1,
+        "satisfied": 0
+      }
+    },
+    {
+      "day": 4,
+      "date": "2024-01-04",
+      "tone": "casual",
+      "mood": "anxious",
+      "energy": "medium",
+      "sentiment_score": -0.251,
+      "formality_score": 0.194,
+      "dominant_topics": [
+        "rag",
+        "success",
+        "family",
+        "deadline",
+        "work-stress"
+      ],
+      "mentioned_entities": [
+        "sister",
+        "manager"
+      ],
+      "sample_text": "Okay so get this - I finally cracked the RAG problem lol! Took me all night but worth it.",
+      "raw_labels": {
+        "frustrated": 1,
+        "curious": 0,
+        "happy": 2,
+        "playful": 1,
+        "anxious": 3,
+        "satisfied": 1
+      }
+    },
+    {
+      "day": 7,
+      "date": "2024-01-07",
+      "tone": "neutral",
+      "mood": "playful",
+      "energy": "medium",
+      "sentiment_score": 0.96,
+      "formality_score": 0.5,
+      "dominant_topics": [
+        "humor",
+        "teaching",
+        "games",
+        "satisfaction"
+      ],
+      "mentioned_entities": [
+        "sister"
+      ],
+      "sample_text": "Haha I just tried explaining embeddings to my sister and her face was priceless \ud83d\ude02",
+      "raw_labels": {
+        "frustrated": 0,
+        "curious": 1,
+        "happy": 4,
+        "playful": 6,
+        "anxious": 0,
+        "satisfied": 2
+      }
+    }
+  ],
+  "drift_events": [
+    {
+      "from_day": 1,
+      "to_day": 2,
+      "drift_magnitude": 0.466,
+      "mood_change": [
+        "curious",
+        "happy"
+      ],
+      "tone_change": [
+        "formal",
+        "formal"
+      ],
+      "trigger_type": "person",
+      "trigger_value": "sister",
+      "explanation": "Mention of 'sister' correlated with tone shift from formal \u2192 formal"
+    },
+    {
+      "from_day": 2,
+      "to_day": 3,
+      "drift_magnitude": 0.555,
+      "mood_change": [
+        "happy",
+        "frustrated"
+      ],
+      "tone_change": [
+        "formal",
+        "formal"
+      ],
+      "trigger_type": "event",
+      "trigger_value": "rag",
+      "explanation": "Sharp sentiment shift (0.49 \u2192 -0.61) linked to topic: 'rag'"
+    },
+    {
+      "from_day": 3,
+      "to_day": 4,
+      "drift_magnitude": 0.564,
+      "mood_change": [
+        "frustrated",
+        "anxious"
+      ],
+      "tone_change": [
+        "formal",
+        "casual"
+      ],
+      "trigger_type": "person",
+      "trigger_value": "manager",
+      "explanation": "Mention of 'manager' correlated with tone shift from formal \u2192 casual"
+    },
+    {
+      "from_day": 4,
+      "to_day": 7,
+      "drift_magnitude": 0.634,
+      "mood_change": [
+        "anxious",
+        "playful"
+      ],
+      "tone_change": [
+        "casual",
+        "neutral"
+      ],
+      "trigger_type": "event",
+      "trigger_value": "humor",
+      "explanation": "Sharp sentiment shift (-0.25 \u2192 0.96) linked to topic: 'humor'"
+    }
+  ]
+}

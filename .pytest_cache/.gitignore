@@ -1,0 +1,6 @@
+echo "__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+*.egg-info/" > .gitignore

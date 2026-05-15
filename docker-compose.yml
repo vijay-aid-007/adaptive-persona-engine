@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  persona-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: adaptive-persona-engine:latest
+    container_name: persona-engine
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=info
+    volumes:
+      # Persist trained models across restarts
+      - models_vol:/app/models
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 512M
+
+volumes:
+  models_vol:
