@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Adaptive Persona Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0A0F0D;--surface:#111810;--card:#161D15;--border:#1E2B1C;
+    --accent:#1D9E75;--accent-dim:#0F6E56;--accent-glow:#1D9E7520;
+    --text:#E8F0E6;--text-2:#8BA888;--text-3:#4A6347;
+    --red:#F0997B;--red-bg:#1C0E08;--amber:#EF9F27;--amber-bg:#1A1200;
+    --blue:#85B7EB;--blue-bg:#071520;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6}
+  code,pre{font-family:'DM Mono',monospace}
+
+  /* NAV */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100;backdrop-filter:blur(8px)}
+  .nav-logo{display:flex;align-items:center;gap:10px}
+  .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+  .logo-name{font-size:15px;font-weight:600;color:var(--text)}
+  .logo-version{font-size:11px;color:var(--text-3);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-left:4px}
+  .status-pill{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent-dim);border-radius:20px;padding:5px 14px}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* HERO */
+  .hero{text-align:center;padding:4rem 2rem 2rem;max-width:680px;margin:0 auto}
+  .hero-tag{font-size:12px;font-weight:500;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent-dim);border-radius:20px;padding:4px 14px;display:inline-block;margin-bottom:1.5rem;letter-spacing:.05em;text-transform:uppercase}
+  .hero h1{font-size:clamp(28px,5vw,48px);font-weight:600;color:var(--text);line-height:1.2;margin-bottom:1rem}
+  .hero h1 span{color:var(--accent)}
+  .hero p{font-size:15px;color:var(--text-2);max-width:480px;margin:0 auto 2rem}
+  .hero-stats{display:flex;justify-content:center;gap:2rem;margin-bottom:2rem}
+  .h-stat{text-align:center}
+  .h-stat-val{font-size:24px;font-weight:600;color:var(--text)}
+  .h-stat-lbl{font-size:12px;color:var(--text-3)}
+
+  /* MAIN */
+  main{max-width:900px;margin:0 auto;padding:0 1.5rem 4rem}
+
+  /* TABS */
+  .tabs{display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:1.5rem}
+  .tab{flex:1;padding:10px 12px;border:none;background:transparent;color:var(--text-2);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;font-weight:500}
+  .tab.active{background:var(--accent);color:#fff}
+  .tab:not(.active):hover{background:var(--card);color:var(--text)}
+
+  .panel{display:none}
+  .panel.active{display:block;animation:fadeIn .2s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+  /* CARDS */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+  .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .card-title{font-size:14px;font-weight:500;color:var(--text)}
+
+  /* BADGES */
+  .badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+  .badge-green{background:var(--accent-glow);color:var(--accent);border:1px solid var(--accent-dim)}
+  .badge-red{background:var(--red-bg);color:var(--red);border:1px solid #4A1B0C}
+  .badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid #412402}
+  .badge-blue{background:var(--blue-bg);color:var(--blue);border:1px solid #042C53}
+  .badge-gray{background:var(--surface);color:var(--text-2);border:1px solid var(--border)}
+
+  /* INPUTS */
+  .input-row{display:flex;gap:8px;margin-bottom:.75rem}
+  input[type=text],textarea{
+    flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;
+    color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;
+    padding:10px 14px;outline:none;transition:border .15s
+  }
+  input[type=text]:focus,textarea:focus{border-color:var(--accent)}
+
+  /* BUTTONS */
+  .btn{display:flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:all .15s;white-space:nowrap}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn.primary:hover{background:var(--accent-dim)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+
+  /* CHIPS */
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+  .chip{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;transition:all .12s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* INTENT */
+  .intent-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+  .intent-label{font-size:32px;font-weight:600;color:var(--text);text-transform:capitalize;margin-bottom:.5rem}
+  .intent-desc{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:1rem}
+  .conf-wrap .conf-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);margin-bottom:5px}
+  .bar-bg{height:6px;background:var(--surface);border-radius:3px;overflow:hidden}
+  .bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .5s ease}
+  .scores{display:flex;flex-direction:column;gap:7px}
+  .score-row{display:flex;align-items:center;gap:8px}
+  .score-name{font-size:12px;color:var(--text-2);width:115px;flex-shrink:0;text-transform:capitalize}
+  .mini-bg{flex:1;height:4px;background:var(--surface);border-radius:2px;overflow:hidden}
+  .mini-fill{height:100%;background:var(--accent-dim);border-radius:2px}
+  .score-pct{font-size:11px;color:var(--text-3);width:32px;text-align:right}
+  .latency-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+
+  /* TIMELINE */
+  .tl-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+  .tl-item:last-child{border-bottom:none}
+  .tl-day{width:48px;flex-shrink:0;text-align:center}
+  .tl-day-num{font-size:22px;font-weight:600;color:var(--text)}
+  .tl-day-lbl{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em}
+  .tl-body{flex:1}
+  .tl-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+  .pill{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid}
+  .pill-curious{background:#071520;color:var(--blue);border-color:#042C53}
+  .pill-frustrated{background:var(--red-bg);color:var(--red);border-color:#4A1B0C}
+  .pill-playful{background:var(--accent-glow);color:var(--accent);border-color:var(--accent-dim)}
+  .pill-anxious{background:var(--amber-bg);color:var(--amber);border-color:#412402}
+  .pill-happy,.pill-satisfied{background:#0A1A08;color:#9FE1CB;border-color:#04342C}
+  .pill-neutral,.pill-tone{background:var(--surface);color:var(--text-2);border-color:var(--border)}
+  .tl-sent{font-size:12px;color:var(--text-3)}
+
+  .drift-section{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+  .section-label{font-size:11px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+  .drift-ev{display:flex;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:6px}
+  .drift-body{flex:1}
+  .drift-title{font-size:13px;color:var(--text);margin-bottom:3px}
+  .drift-reason{font-size:12px;color:var(--text-2);line-height:1.5}
+  .drift-trigger{font-size:11px;color:var(--blue);background:var(--blue-bg);border:1px solid #042C53;border-radius:20px;padding:2px 9px;display:inline-block;margin-top:5px}
+
+  /* RAG */
+  .merged{background:var(--accent-glow);border:1px solid var(--accent-dim);border-radius:8px;padding:14px;margin-bottom:1rem}
+  .merged-label{font-size:11px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+  .merged-text{font-size:14px;color:var(--text);line-height:1.6}
+  .chunk{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:6px}
+  .chunk-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .chunk-text{font-size:13px;color:var(--text-2);line-height:1.5}
+
+  /* MISC */
+  .error{background:var(--red-bg);border:1px solid #4A1B0C;border-radius:8px;padding:12px 14px;font-size:13px;color:var(--red);margin-top:.75rem}
+  .empty{text-align:center;padding:3rem 1rem;color:var(--text-3);font-size:14px}
+  .empty i{font-size:36px;display:block;margin-bottom:10px;color:var(--text-3)}
+  .spinner{width:14px;height:14px;border:2px solid var(--accent-dim);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* FOOTER */
+  footer{text-align:center;padding:2rem;font-size:12px;color:var(--text-3);border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="logo-icon"><i class="ti ti-brain"></i></div>
+    <span class="logo-name">Adaptive Persona Engine</span>
+    <span class="logo-version">v1.0</span>
+  </div>
+  <div class="status-pill"><span class="dot"></span><span id="api-status">Connecting…</span></div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">AI/ML Intern Assessment — Parts 1, 2 &amp; 3</div>
+  <h1>Intelligent <span>Persona & Intent</span> Engine</h1>
+  <p>Offline intent classification, day-by-day persona drift detection, and conflict-aware RAG resolution.</p>
+  <div class="hero-stats">
+    <div class="h-stat"><div class="h-stat-val">20 KB</div><div class="h-stat-lbl">Model size</div></div>
+    <div class="h-stat"><div class="h-stat-val">&lt;200ms</div><div class="h-stat-lbl">Inference SLA</div></div>
+    <div class="h-stat"><div class="h-stat-val">5</div><div class="h-stat-lbl">Intent classes</div></div>
+    <div class="h-stat"><div class="h-stat-val">33/33</div><div class="h-stat-lbl">Tests passing</div></div>
+  </div>
+</div>
+
+<main>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('intent',this)"><i class="ti ti-tag"></i> Intent Classifier</button>
+    <button class="tab" onclick="switchTab('persona',this)"><i class="ti ti-timeline"></i> Persona Drift</button>
+    <button class="tab" onclick="switchTab('rag',this)"><i class="ti ti-git-merge"></i> RAG Resolver</button>
+  </div>
+
+  <!-- INTENT -->
+  <div class="panel active" id="panel-intent">
+    <div class="chips">
+      <span class="chip" onclick="qi('remind me to call mom tomorrow')">remind me to call mom</span>
+      <span class="chip" onclick="qi('I feel really anxious and overwhelmed today')">I feel overwhelmed</span>
+      <span class="chip" onclick="qi('add this to my task list and follow up Friday')">add to task list</span>
+      <span class="chip" onclick="qi('haha what is up how is your day going')">casual chat</span>
+      <span class="chip" onclick="qi('purple monkey dishwasher quantum xkcd')">unknown gibberish</span>
+    </div>
+    <div class="input-row">
+      <input id="ii" type="text" placeholder="Type a message to classify…" onkeydown="if(event.key==='Enter')doIntent()"/>
+      <button class="btn primary" id="ib" onclick="doIntent()"><i class="ti ti-sparkles"></i> Classify</button>
+    </div>
+    <div id="ir"><div class="empty"><i class="ti ti-tag"></i>Enter a message above to classify intent</div></div>
+  </div>
+
+  <!-- PERSONA -->
+  <div class="panel" id="panel-persona">
+    <div class="input-row">
+      <button class="btn primary" id="pb" onclick="doPersona()"><i class="ti ti-player-play"></i> Run Demo Timeline</button>
+    </div>
+    <div id="pr"><div class="empty"><i class="ti ti-timeline"></i>Click above to load the persona drift timeline</div></div>
+  </div>
+
+  <!-- RAG -->
+  <div class="panel" id="panel-rag">
+    <div class="chips">
+      <span class="chip" onclick="qr('Did I mention anything about my sister?')">Sister query</span>
+      <span class="chip" onclick="qr('What did I say about the project deadline?')">Project deadline</span>
+      <span class="chip" onclick="qr('How did I feel about my manager?')">Manager feelings</span>
+    </div>
+    <div class="input-row">
+      <input id="ri" type="text" placeholder="Ask about your conversation history…" onkeydown="if(event.key==='Enter')doRag()"/>
+      <button class="btn primary" id="rb" onclick="doRag()"><i class="ti ti-search"></i> Resolve</button>
+    </div>
+    <div id="rr"><div class="empty"><i class="ti ti-git-merge"></i>Enter a query to resolve RAG conflicts</div></div>
+  </div>
+</main>
+
+<footer>Built for AI/ML Intern Assessment &mdash; Adaptive Persona Engine &copy; 2026</footer>
+
+<script>
+// ← CHANGE THIS to your Railway URL after backend deploy
+const BASE = 'https://YOUR-APP.up.railway.app';
+
+async function ping(){
+  try{
+    const r=await fetch(BASE+'/health',{signal:AbortSignal.timeout(4000)});
+    const d=await r.json();
+    document.getElementById('api-status').textContent='API live';
+  }catch{
+    document.getElementById('api-status').textContent='API offline';
+    document.querySelector('.dot').style.background='#F0997B';
+  }
+}
+ping();
+
+function switchTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+}
+
+function qi(t){document.getElementById('ii').value=t;}
+function qr(t){document.getElementById('ri').value=t;}
+
+function setBtn(id,loading,defaultHTML){
+  const b=document.getElementById(id);
+  b.disabled=loading;
+  b.innerHTML=loading?'<span class="spinner"></span> Working…':defaultHTML;
+}
+
+function moodPill(m){
+  const map={curious:'pill-curious',frustrated:'pill-frustrated',playful:'pill-playful',anxious:'pill-anxious',happy:'pill-happy',satisfied:'pill-satisfied'};
+  return `<span class="pill ${map[m]||'pill-neutral'}">${m}</span>`;
+}
+
+async function doIntent(){
+  const msg=document.getElementById('ii').value.trim();
+  if(!msg)return;
+  setBtn('ib',true,'');
+  const el=document.getElementById('ir');
+  try{
+    const r=await fetch(BASE+'/intent/classify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:msg})});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    const conf=Math.round(d.confidence*100);
+    const scores=d.all_scores||{};
+    const rows=Object.entries(scores).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
+      const p=Math.round(v*100);
+      return `<div class="score-row"><span class="score-name">${k.replace('_',' ')}</span><div class="mini-bg"><div class="mini-fill" style="width:${p}%"></div></div><span class="score-pct">${p}%</span></div>`;
+    }).join('');
+    el.innerHTML=`<div class="card">
+      <div class="card-header"><span class="card-title">Classification result</span><span class="badge badge-green">${d.fallback?'fallback':'confident'}</span></div>
+      <div class="intent-grid">
+        <div>
+          <div class="intent-label">${d.intent.replace('_',' ')}</div>
+          <div class="intent-desc">${d.description||''}</div>
+          <div class="conf-wrap"><div class="conf-row"><span>Confidence</span><span>${conf}%</span></div><div class="bar-bg"><div class="bar-fill" style="width:${conf}%"></div></div></div>
+        </div>
+        <div class="scores">${rows}</div>
+      </div>
+      <div class="latency-row"><i class="ti ti-bolt"></i>${(d.latency_ms||0).toFixed(1)} ms &nbsp;·&nbsp; fully offline &nbsp;·&nbsp; 20 KB model</div>
+    </div>`;
+  }catch(e){
+    el.innerHTML=`<div class="error"><i class="ti ti-alert-circle"></i> ${e.message}</div>`;
+  }
+  setBtn('ib',false,'<i class="ti ti-sparkles"></i> Classify');
+}
+
+async function doPersona(){
+  setBtn('pb',true,'');
+  const el=document.getElementById('pr');
+  try{
+    const r=await fetch(BASE+'/persona/demo');
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    const snaps=d.snapshots||d.timeline?.snapshots||[];
+    const drifts=d.drift_events||d.timeline?.drift_events||[];
+    const tlHTML=snaps.map(s=>`<div class="tl-item">
+      <div class="tl-day"><div class="tl-day-num">${s.day}</div><div class="tl-day-lbl">day</div></div>
+      <div class="tl-body">
+        <div class="tl-pills">${moodPill(s.mood)}<span class="pill pill-tone">${s.tone}</span><span class="pill pill-tone">${s.energy} energy</span></div>
+        <div class="tl-sent">Sentiment ${s.sentiment_score>0?'+':''}${(s.sentiment_score||0).toFixed(2)} &nbsp;·&nbsp; ${(s.sample_text||'').slice(0,70)}${(s.sample_text||'').length>70?'…':''}</div>
+      </div>
+    </div>`).join('');
+    const drHTML=drifts.length?drifts.map(e=>`<div class="drift-ev">
+      <div><i class="ti ti-arrow-right" style="color:var(--text-3)"></i></div>
+      <div class="drift-body">
+        <div class="drift-title">Day ${e.from_day} → Day ${e.to_day} <span style="font-size:12px;color:var(--text-3)">magnitude ${(e.drift_magnitude||0).toFixed(2)}</span></div>
+        <div class="drift-reason">${e.explanation}</div>
+        <span class="drift-trigger">${e.trigger_type}: ${e.trigger_value}</span>
+      </div>
+    </div>`).join(''):'<div style="font-size:13px;color:var(--text-3)">No significant drifts detected.</div>';
+    el.innerHTML=`<div class="card">
+      <div class="card-header"><span class="card-title">Persona drift timeline</span><span class="badge badge-blue">${snaps.length} sessions</span></div>
+      <div>${tlHTML}</div>
+      <div class="drift-section"><div class="section-label">Drift events</div>${drHTML}</div>
+    </div>`;
+  }catch(e){
+    el.innerHTML=`<div class="error"><i class="ti ti-alert-circle"></i> ${e.message}</div>`;
+  }
+  setBtn('pb',false,'<i class="ti ti-player-play"></i> Run Demo Timeline');
+}
+
+async function doRag(){
+  const q=document.getElementById('ri').value.trim();
+  if(!q)return;
+  setBtn('rb',true,'');
+  const el=document.getElementById('rr');
+  try{
+    const r=await fetch(BASE+'/rag/resolve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    const chunks=d.ranked_chunks||d.chunks||[];
+    const conflicts=d.contradictions||d.conflicts||[];
+    const cHTML=chunks.slice(0,4).map(c=>`<div class="chunk">
+      <div class="chunk-meta">
+        <span class="badge badge-gray">Day ${c.day??c.checkpoint??'?'}</span>
+        <span class="badge badge-green">score ${(c.score?.toFixed?c.score.toFixed(2):c.score)||'—'}</span>
+        ${c.has_conflict||c.contradiction?'<span class="badge badge-red"><i class="ti ti-alert-triangle"></i> conflict</span>':''}
+      </div>
+      <div class="chunk-text">${c.text||c.content||''}</div>
+    </div>`).join('');
+    el.innerHTML=`<div class="card">
+      <div class="card-header"><span class="card-title">RAG conflict resolution</span><span class="badge ${conflicts.length?'badge-amber':'badge-green'}">${conflicts.length} conflict${conflicts.length!==1?'s':''}</span></div>
+      <div class="merged"><div class="merged-label"><i class="ti ti-check"></i> Merged answer</div><div class="merged-text">${d.merged_answer||d.answer||d.result||'No merged answer.'}</div></div>
+      ${chunks.length?`<div class="section-label">Ranked chunks</div>${cHTML}`:''}
+    </div>`;
+  }catch(e){
+    el.innerHTML=`<div class="error"><i class="ti ti-alert-circle"></i> ${e.message}</div>`;
+  }
+  setBtn('rb',false,'<i class="ti ti-search"></i> Resolve');
+}
+</script>
+</body>
+</html>
