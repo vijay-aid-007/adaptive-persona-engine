@@ -31,8 +31,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy application source
 COPY src/       ./src/
 COPY data/      ./data/
-COPY models/    ./models/
-COPY tests/     ./tests/
+RUN mkdir -p ./models
 COPY scripts/   ./scripts/
 
 # Non-root user for security
