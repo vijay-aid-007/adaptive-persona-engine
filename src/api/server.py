@@ -178,14 +178,16 @@ def analyze_persona(request: PersonaRequest) -> Dict[str, Any]:
 
 @app.get("/persona/demo", tags=["Part 1 — Persona Drift"])
 def analyze_persona_demo() -> Dict[str, Any]:
-    """Analyze the built-in demo persona data."""
-    data_path = Path(__file__).parent.parent / "data" / "persona_data.json"
-    if not data_path.exists():
-        raise HTTPException(status_code=404, detail="Demo persona data not found")
-    with open(data_path) as f:
-        persona_json = json.load(f)
-
-    req = PersonaRequest(persona_json=persona_json)
+    """Analyze built-in demo persona data."""
+    demo_data = {
+        "user_id": "demo_user",
+        "sessions": [
+            {"day": 1, "date": "2024-01-01", "messages": [{"role": "user", "text": "Could you please explain this formally? I would like to understand the architecture in detail."}], "topics": ["architecture"], "entities": []},
+            {"day": 4, "date": "2024-01-04", "messages": [{"role": "user", "text": "ugh this is so frustrating, i am stuck and stressed about the deadline"}], "topics": ["deadline"], "entities": []},
+            {"day": 7, "date": "2024-01-07", "messages": [{"role": "user", "text": "haha this is so fun! lol finally cracked it, game over!"}], "topics": ["victory"], "entities": []}
+        ]
+    }
+    req = PersonaRequest(persona_json=demo_data)
     return analyze_persona(req)
 
 
